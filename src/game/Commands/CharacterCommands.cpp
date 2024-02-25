@@ -38,6 +38,23 @@
 
 #include <regex>
 
+bool ChatHandler::HandleCharacterHardcoreCommand(char* args)
+{
+    Player* player = m_session->GetPlayer();
+    if (player->IsHardcore())
+    {
+        PSendSysMessage("You are already in hardcore mode.");
+        return true;
+    }
+    if (player->GetLevel() > 1)
+    {
+        return false;
+    }
+    player->SetHardcore();
+    PSendSysMessage("You are now in hardcore mode. Good luck!");
+    return true;
+}
+
 bool ChatHandler::HandleCharacterAIInfoCommand(char* /*args*/)
 {
     Player* pTarget = GetSelectedPlayer();

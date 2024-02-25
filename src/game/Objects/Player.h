@@ -2313,6 +2313,9 @@ class Player final: public Unit
         uint32 GetCorpseReclaimDelay(bool pvp) const;
         void SendCorpseReclaimDelay(bool load = false) const;
 
+        bool IsHardcore();
+        void SetHardcore();
+
         /*********************************************************/
         /***                    CHAT SYSTEM                    ***/
         /*********************************************************/

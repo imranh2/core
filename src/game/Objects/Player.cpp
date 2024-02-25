@@ -5076,6 +5076,13 @@ void Player::BuildPlayerRepop()
 
 void Player::ResurrectPlayer(float restore_percent, bool applySickness)
 {
+
+    if (IsHardcore())
+    {
+        ChatHandler(this).PSendSysMessage("You are playing in hardcore mode, you cannot resurrect.");
+        return;
+    }
+
     // Interrupt resurrect spells
     InterruptSpellsCastedOnMe(false, true);
 
@@ -15561,6 +15568,9 @@ bool Player::LoadFromDB(ObjectGuid guid, SqlQueryHolder* holder)
     if ((extraflags & PLAYER_EXTRA_CITY_PROTECTOR) && sWorld.getConfig(CONFIG_BOOL_ENABLE_CITY_PROTECTOR))
         SetCityTitle();
 
+    if ((extraflags & PLAYER_EXTRA_HARDCORE) && sWorld.getConfig(CONFIG_BOOL_ENABLE_HARDCORE))
+        SetHardcore();
+
     sBattleGroundMgr.PlayerLoggedIn(this); // Add to BG queue if needed
     CreatePacketBroadcaster();
 
@@ -20536,6 +20546,10 @@ void Player::SendCorpseReclaimDelay(bool load) const
     data << uint32(delay * IN_MILLISECONDS);
     GetSession()->SendPacket(&data);
 }
+
+bool Player::IsHardcore() { return m_ExtraFlags & PLAYER_EXTRA_HARDCORE; }
+
+void Player::SetHardcore() { m_ExtraFlags |= PLAYER_EXTRA_HARDCORE; }
 
 Player* Player::GetNextRandomRaidMember(float radius)
 {
