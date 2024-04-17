@@ -36,7 +36,7 @@
 
 void utf8print(void* /*arg*/, const char* str)
 {
-#if PLATFORM == PLATFORM_WINDOWS
+#ifdef WIN32
     std::wstring wtemp_buf;
     std::string temp_buf(str);
 
@@ -59,7 +59,7 @@ void utf8print(void* /*arg*/, const char* str)
 
 void commandFinished(void*, bool /*sucess*/)
 {
-#ifdef WIN32
+#ifndef linux
     printf("mangos>");
 #endif
     fflush(stdout);
@@ -98,7 +98,7 @@ void CliRunnable::operator()()
 
     // print this here the first time
     // later it will be printed after command queue updates
-    #ifdef WIN32
+    #ifndef linux
     printf("\nmangos>");
     #endif
 
@@ -107,7 +107,7 @@ void CliRunnable::operator()()
     {
         fflush(stdout);
 
-        #ifdef WIN32
+        #ifndef linux
         char *command_str = fgets(commandbuf,sizeof(commandbuf),stdin);
         #else
         rl_event_hook = &checkStopped;
@@ -129,7 +129,7 @@ void CliRunnable::operator()()
 
             if(!*command_str)
             {
-                #ifdef WIN32
+                #ifndef linux
                 printf("mangos>");
                 #endif
                 continue;
@@ -138,7 +138,7 @@ void CliRunnable::operator()()
             std::string command;
             if(!consoleToUtf8(command_str,command))         // convert from console encoding to utf8
             {
-                #ifdef WIN32
+                #ifndef linux
                 printf("mangos>");
                 #endif
                 continue;
